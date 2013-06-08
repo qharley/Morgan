@@ -12,7 +12,7 @@ include <MCAD/nuts_and_bolts.scad>
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 175;	// Distance between rods:	175 standard, 195 wide
 
-MakeMorgan(21);		// Select Part number to make	
+MakeMorgan(23);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -38,7 +38,7 @@ MakeMorgan(21);		// Select Part number to make
 //**	18: Arm PSI B (outer supporting arm)						**
 //**	19: Arm Theta A (inner steering arm)						**
 //**	20: Arm Theta B (outter steering arm)						**
-//**	21: Hot-end holder head (make from ABS/Nylon/etc)		**
+//**	21: Morgan Tool head (make from ABS/Nylon/etc)		**
 //**	22: Lead screw nut (Alpen 8mm SDS)	
 //**	23: extruder Bowden adaptor						
 //**
@@ -1512,7 +1512,7 @@ module Extruder_Bowden_adaptor(support = true)
 		union(){
 			translate([-11,11,15])
 				difference(){
-					import("./Bowden_Clamp_for_Ultimaker_Heater_End/Base_and_Riser_2.stl");
+					import("Base_and_Riser_2.stl");
 					cube([50,50,40], center = true);
 			}
 			
