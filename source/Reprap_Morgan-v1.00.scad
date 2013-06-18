@@ -10,9 +10,9 @@ include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
-rodspacing = 175;	// Distance between rods:	175 standard, 195 wide
+rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
 
-MakeMorgan(23);		// Select Part number to make	
+MakeMorgan(01);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -44,11 +44,11 @@ MakeMorgan(23);		// Select Part number to make
 //**
 //**  TO DO!  Build Plates...
 //**		Select number of build plate
-//**	50: Arms Plate
-//**	51: Bed Plate
-//**	55: Wheel PlateA
-//**	56: Wheel PlateB
-//**	60: Diverse Plate
+//**	50: Arms Plate (PLA)
+//**	51: Bed Plate	(PLA)
+//**	55: Wheel PlateA	(PLA)
+//**	56: Wheel PlateB	(PLA)
+//**	60: Diverse Plate	(ABS)
 
 
 
@@ -103,7 +103,7 @@ module MakeMorgan(partnumber)
 			MorganBedarmRight(15.5);
 	}
 	if (partnumber == 12 ){
-		Bed_stabil_bracket(21.5);
+		//Bed_stabil_bracket(21.5);
 		if(LMxUU == 12)
 			Bed_stabil_bracket(21.5);
 		else
@@ -149,7 +149,62 @@ module MakeMorgan(partnumber)
 		Extruder_Bowden_adaptor(support = false);
 	}
 	
+//**************** Plates  ***************************
 
+	if (partnumber == 60 ){
+		translate([0,0,0])
+			rotate([0,0,0])
+				Secondary_Arm_hotend_holder(Hotend_D = 16.5, Hotend_H = 12);
+
+		translate([70,-10,0])
+			rotate([0,0,180])
+				MorganPVCsupport_ANG(26.5,130,130,420, pipe = false, port=true);	// 458.47
+	
+		translate([-40,0,0])
+			rotate([0,0,180])
+				MorganPVCsupport_ANG(26.5,130,130,420, pipe = false, port=true);	// 458.47
+
+		translate([-50,40,0])
+			rotate([0,0,0])
+				MorganPVCsupport_ANG(26.5,70,150,420, pipe = false);					// 451.44
+		
+		translate([-50,-70,0])
+			rotate([0,0,0])
+				MorganPVCsupport_ANG(26.5,70,150,420, pipe = false);					// 451.44
+
+		translate([-70,-40,0])
+			rotate([0,0,0])
+				Extruder_Bowden_adaptor(support = false);
+
+		translate([40,-35,0])
+			rotate([0,0,0])
+				import("../stl/cap_2.stl");
+
+		translate([-40,-35,0])
+			rotate([0,0,0])
+				import("../stl/cap_2.stl");
+
+		translate([-30,50,0])
+			rotate([0,0,0])
+				import("../stl/Eckstruder_Big_Gear_Herringbone.stl");
+
+		translate([-16,-35,20])
+			rotate([0,0,0])
+				import("../stl/Eckstruder_Small_Gear_Herringbone.stl");
+
+		translate([-50,-25,0])
+			rotate([0,0,-90])
+				import("../stl/Eckstruder_Idler_Block_for_Prusa.stl");
+
+		translate([50,-65,0])
+			rotate([0,0,0])
+				import("../stl/thumb_knob_M4_extruder.stl");
+
+		translate([10,110,0])
+			rotate([0,0,-90])
+				import("../stl/Eckstruder_Block_for_Prusa.stl");
+
+	}
 
 }
 
@@ -432,16 +487,33 @@ module MorganFrame(){
 module Bed_stabil_bracket(bsize = 15.5){
 	difference(){
 		union(){
-			translate([190/2,0,0])
+			translate([(rodspacing)/2,0,0])
 				Bed_stabil_clasp(bsize);
-			translate([-190/2,0,0])
+			translate([(rodspacing)/-2,0,0])
 				mirror(){
 					Bed_stabil_clasp(bsize);
 				}
-
-			translate([0,-14.5,25])
-				cube([195-bsize,3,50],center=true);
+			difference(){
+			  union(){
+				translate([0,-14.5,25])
+					cube([rodspacing-bsize+10,3,50],center=true);
+			
+				translate([rodspacing/2,-12,0])
+					rotate([0,0,-160])
+						cube([rodspacing/2, 3, 50]);
+				mirror()
+					translate([rodspacing/2,-12,0])
+						rotate([0,0,-160])
+							cube([rodspacing/2, 3, 50]);
+			  }
 		
+			  translate([rodspacing/2,0,0])
+					#cylinder(r=bsize*0.8, h=50);
+			  translate([rodspacing/-2,0,0])
+					#cylinder(r=bsize*0.8, h=50);	
+			}		
+
+	
 			cylinder(r=22,h=50);
 
 			translate([0,-40,0])
@@ -457,13 +529,13 @@ module Bed_stabil_bracket(bsize = 15.5){
 		translate([-25,-13,0])
 		cube([50,50,50]);
 
-		translate([45,-15,22])
+		translate([45,-30,22])
 			rotate([0,0,90])
-				teardrop(16, 30, 90);
+				teardrop(16, 50, 90);
 				
-		translate([-45,-15,22])
+		translate([-45,-30,22])
 			rotate([0,0,90])
-				teardrop(16, 30, 90);
+				teardrop(16, 50, 90);
 				
 
 		translate([0,-40,0])
@@ -472,6 +544,9 @@ module Bed_stabil_bracket(bsize = 15.5){
 			cylinder(r=8,h=41,$fn=6);
 		translate([0,-40,6.5])
 			cylinder(r=4.5, h=10);
+
+		translate([rodspacing/-2+LMxUU/1.5, LMxUU*-1.75, 0])
+			cylinder(r=2.5, h=3);
 	
 	}
 }
