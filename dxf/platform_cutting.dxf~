@@ -4267,7 +4267,7 @@ ByLayer
  10
 103.0
  20
-289.0
+271.0
  30
 0.0
  40
@@ -4291,7 +4291,103 @@ ByLayer
  10
 103.0
  20
-271.0
+289.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+B7
+100
+AcDbEntity
+100
+AcDbCircle
+  8
+Cut-Optional
+ 62
+256
+370
+-1
+  6
+ByLayer
+ 10
+297.0
+ 20
+49.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+B8
+100
+AcDbEntity
+100
+AcDbCircle
+  8
+Cut-Optional
+ 62
+256
+370
+-1
+  6
+ByLayer
+ 10
+297.0
+ 20
+31.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+B9
+100
+AcDbEntity
+100
+AcDbCircle
+  8
+Cut-Optional
+ 62
+256
+370
+-1
+  6
+ByLayer
+ 10
+103.0
+ 20
+31.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+BA
+100
+AcDbEntity
+100
+AcDbCircle
+  8
+Cut-Optional
+ 62
+256
+370
+-1
+  6
+ByLayer
+ 10
+103.0
+ 20
+49.0
  30
 0.0
  40
@@ -4335,7 +4431,7 @@ E
   3
 AcDbVariableDictionary
 350
-B7
+BB
   0
 DICTIONARY
   5
@@ -4799,7 +4895,7 @@ Layout2
   0
 DICTIONARY
   5
-B7
+BB
 100
 AcDbDictionary
 281
@@ -4807,15 +4903,15 @@ AcDbDictionary
   3
 DIMASSOC
 350
-B9
+BD
   3
 HIDETEXT
 350
-B8
+BC
   0
 DICTIONARYVAR
   5
-B8
+BC
 100
 DictionaryVariables
 280
@@ -4825,7 +4921,7 @@ DictionaryVariables
   0
 DICTIONARYVAR
   5
-B9
+BD
 100
 DictionaryVariables
 280
