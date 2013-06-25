@@ -497,7 +497,7 @@ module BedMountFront()
 					cylinder(r=15/2+3, h=20, center=true);
 			translate([0,0,6.5])
 				rotate([0,90,0])
-					cylinder(r=15/2+1.5, h=20, center=true);
+					cylinder(r=15/2+2, h=20, center=true);
 			translate([0,0,19])
 				cube([15,25,25],center=true);
 		}
