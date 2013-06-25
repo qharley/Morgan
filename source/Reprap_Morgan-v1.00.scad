@@ -12,7 +12,7 @@ include <MCAD/nuts_and_bolts.scad>
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
 
-MakeMorgan(01);		// Select Part number to make	
+MakeMorgan(14);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -116,7 +116,7 @@ module MakeMorgan(partnumber)
 		BedMountRear();
 	}
 	if (partnumber == 14 ){
-		echo ("************************  Not yet - use 15mm pipe wall clips  *************************");
+		BedMountFront();
 	}
 	
 	if (partnumber == 15 ){
@@ -481,6 +481,36 @@ module MorganFrame(){
 			translate([-20,130,0])
 				MorganPVCsupport_ANG(29,-130,-130,420, pipe = pipeselect);
 		}
+}
+
+module BedMountFront()
+{
+  rotate([0,90,0])	
+	difference(){
+		cube([15,25,25], center=true);
+		translate([0,0,6.5])
+			rotate([0,90,0])
+				cylinder(r=15/2, h=20, center=true);	
+		difference(){
+			translate([0,0,6.5])
+				rotate([0,90,0])
+					cylinder(r=15/2+3, h=20, center=true);
+			translate([0,0,6.5])
+				rotate([0,90,0])
+					cylinder(r=15/2+1.5, h=20, center=true);
+			translate([0,0,19])
+				cube([15,25,25],center=true);
+		}
+			
+		cube([15,10,10],center=true);
+		translate([0,0,10])
+			cube([15,12,10],center=true);
+
+		rotate([0,-90,0])
+		#teardrop(2.6,30,90);
+
+
+	}
 }
 
 
