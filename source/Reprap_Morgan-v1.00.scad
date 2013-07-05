@@ -13,7 +13,7 @@ include <lib/Thread_Library.scad>
 LMxUU = 12;			// Choose linear bearing: 8 or 12mm
 rodspacing = 160;	// Distance between rods:	160  Lite,  175 standard, 190 wide
 
-MakeMorgan(25);		// Select Part number to make	
+MakeMorgan(4);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -1539,9 +1539,9 @@ module MorganZmountTop(rodspacing = 175, rodsize = 8) // Default morgan dimentio
 				MorganSRodMount(rodsize);
 
 		translate([-rodspacing/3.5,0,1.5])
-			cube([rodspacing/2.5,16,3], center=true);
+			cube([rodspacing/2.7,16,3], center=true);
 		translate([rodspacing/3.5,0,1.5])
-			cube([rodspacing/2.5,16,3], center=true);
+			cube([rodspacing/2.7,16,3], center=true);
 	}
   
 
