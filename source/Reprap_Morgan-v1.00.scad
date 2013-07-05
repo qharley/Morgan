@@ -8,11 +8,12 @@
 include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
+include <lib/Thread_Library.scad>
 
 LMxUU = 12;			// Choose linear bearing: 8 or 12mm
 rodspacing = 160;	// Distance between rods:	160  Lite,  175 standard, 190 wide
 
-MakeMorgan(7);		// Select Part number to make	
+MakeMorgan(22);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -40,7 +41,8 @@ MakeMorgan(7);		// Select Part number to make
 //**	20: Arm Theta B (outer steering arm)						**
 //**	21: Morgan Tool head (make from ABS/Nylon/etc)		**
 //**	22: Lead screw nut (Alpen 8mm SDS)	
-//**	23: extruder Bowden adaptor						
+//**	23: extruder Bowden adaptor
+//**	24: Motor pulley for fishline drive						
 //**
 //**  TO DO!  Build Plates...
 //**		Select number of build plate
@@ -148,6 +150,9 @@ module MakeMorgan(partnumber)
 	if (partnumber == 23 ){
 		Extruder_Bowden_adaptor(support = false);
 	}
+	if (partnumber == 24 ){
+		Morgan_Motor_Pulley(shaftOD = 5, pitchmm = 1.5, pitchOD = 10, pitchlen = 20);
+	}
 	
 //**************** Plates  ***************************
 
@@ -240,130 +245,36 @@ module Matrix_test()
 
 PipeFactor = 40/39.2;			// Multiplication factor for inner diameter 
 
-
-
-
-//MorganFrame();
-
 pipeselect = false; // Show pipes in frame... default false
 
-//MorganPVCsupport_ANG(26.5,130,130,420, pipe = false, port=true);	// 458.47
-//MorganPVCsupport_ANG(26.5,70,150,420, pipe = false);					// 451.44
 
-//MorganEndstop();
-
-//MorganMotorMount4(Height = 50);
-//MorganMotorMount4(Height = 70);
-
-
-
-//translate([-90,-90,0])
-//	Matrix_test();
-
-
-
-//MorganPillar();				// 6805 bearing tube mount
-
-//MorganBeltWheel();			// Rod mounted belt drive wheel
-//MorganBeltWheel2();			// Tube mounted belt drive wheel
-
-//MorganPVCsupport(29);
-//PipeCuttingTemplate(32);
-
-//MorganSpoolHolder(PipeOD = 32, PipeID=29);
-
-
-rotate([0,0,45]){
-//	MorganBedarmLeft(21.5);
-//	translate([30,0,0])
-//		MorganBedarmRight(21.5);
-//	Bed_stabil_bracket(21.5);
-//MorganZmountTop(195, 12);
-//MorganZmountBot(195, 12);
-}
-
-//BedMountRear();
-
-
-//leadscrew_nut();
-
-// **************** Parts **********************
-//translate([0,0,5])
-//	cylinder(r=14.72/2, h=5, $fn=6);
-//linear_extrude(height = 42)
-//	nutHole(8, proj = 1);
-//boltHole(8);
-
-//Primary_Arm();
-//Secondary_Arm();
-
-//intersection(){
-//	Fastener_stack();
-//	cylinder(r=20, h=5);
-//}
-
-//Secondary_Arm_hotend_holder(Hotend_D = 16.5, Hotend_H = 12);  // Make out of ABS...
-//Secondary_Arm_hotend_holder_2(Hotend_D = 16.5, Hotend_H = 12);  // Make out of ABS...
-//translate([40,0,0])
-//Extruder_Bowden_adaptor();
-
-//Sup_Arm1();
-//Sup_Arm2();
-
-
-
-// *********** Misc **************8
-// bolt_hobber();
-
-// ************** Building Blocks *************
-// MorganPillarMount();
-//	MorganShaftMount();
-// MorganBedarm_mount();
-//Bed_stabil_clasp();
-
-// *****************8***********
-//MorganMotorMount(50);
-//MorganMotorMount(75);
-//MorganFlatMotorMount();
-
-
-
-module leadscrew_profile()
+module leadscrew_profile(profile) 
 {
-	projection(cut=false){
-		polyhole(5,5);
-		cube([7.5, 3,1], center=true);
-		rotate([0,0,-45])
-			cube([6.5,3,1],center = true);
+	if (profile == "alpen")
+	{
+		projection(cut=false){
+			polyhole(5,5);
+			cube([7.5, 3,1], center=true);
+			rotate([0,0,-45])
+				cube([6.5,3,1],center = true);
+		}
 	}
 }
 
-module leadscrew_nut(){
+module leadscrew_nut(profile = "alpen"){
 	difference(){
 		union(){
 			cylinder(r=14.8/2,h=14, $fn=6);
 
 		}
-		linear_extrude(height = 120/4, center = true, twist = -360)
-			scale(1.1)
-				leadscrew_profile();
+		if (profile == "alpen")
+		{
+			linear_extrude(height = 120/4, center = true, twist = -360)
+				scale(1.1)
+					leadscrew_profile(profile);
+		}
 	}
 
-}
-
-module bolt_hobber()
-{
-	difference(){
-		
-
-		translate([0,0,7]){
-			rotate([90,0,0]){
-				cylinder(r=7.8/2, h=50, $fn = 20);
-				cylinder(r=10, h=10, $fn = 12);
-			}
-		}	
-
-	}
 }
 
 module CalCylinder()
@@ -834,6 +745,50 @@ module MorganBedarmRight(bsize = 15.5){
 	
 }
 
+module Morgan_Motor_Pulley(shaftOD = 5, pitchmm = 1.5, pitchOD = 10, pitchlen = 20)
+{   		// Motor pulley for fishline drive version
+  translate([0,0,1])	
+	difference() {
+		union() {
+			trapezoidThread( 
+				length=pitchlen, 		// axial length of the threaded rod
+				pitch=pitchmm,			// axial distance from crest to crest
+				pitchRadius=pitchOD/2,	// radial distance from center to mid-profile
+				threadHeightToPitch=0.4,// ratio between the height of the profile and the pitch
+											// std value for Acme or metric lead screw is 0.5
+				profileRatio=0.5,		// ratio between the lengths of the raised part of the profile and the pitch
+											// std value for Acme or metric lead screw is 0.5
+				threadAngle=30, 			// angle between the two faces of the thread
+											// std value for Acme is 29 or for metric lead screw is 30
+				RH=true, 						// true/false the thread winds clockwise looking along shaft, i.e.follows the Right Hand Rule
+				clearance=0.1, 				// radial clearance, normalized to thread height
+				backlash=0.1, 				// axial clearance, normalized to pitch
+				stepsPerTurn=20 				// number of slices to create per turn
+			);
+
+  			cylinder(r1=pitchOD/2 + 2, r2=pitchOD/2, h=2, center=true);
+  			translate([0,0,pitchlen])
+				cylinder(r1=pitchOD/2, r2=pitchOD/2 + 2, h=2, center=true);
+
+			translate([0,0,pitchlen+1])
+				cylinder(r=pitchOD/2 + 2, h=6);
+	
+		}
+
+		union(){
+			translate([0,0,-10])	
+				polyhole(pitchlen + 20,shaftOD);
+
+			for (i = [1:2])
+				rotate([0,0,i * 120 + 60])
+					translate([shaftOD/2+1.5,0,pitchlen+4]){
+						cube([2.5, 5.5, 7],center = true);
+						teardrop(1.5,pitchOD,90);
+					}
+		}
+
+	}
+}
 
 module Motor(MotorH = 50, MotorW = 42){
 	translate([0,0,MotorH/2])
@@ -913,7 +868,7 @@ module MorganMotorMount4(Height = 50, Mheight = 52){
 
 }
 
-
+/*
 module MorganMotorMount3(Height = 50, Mheight = 52){
 
 	if (Height < Mheight+2)
@@ -1109,7 +1064,7 @@ module MorganMotorMount(Height = 50){
 
    }
 }
-
+*/
 
 module PipeCuttingTemplate(PipeOD, ){
 	difference(){	
@@ -1301,13 +1256,6 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 
 }
 
-//module polyhole(h, d) {
-//    n = max(round(2 * d),3);
-//    rotate([0,0,180])
-//        cylinder(h = h, r = (d / 2) / cos (180 / n), $fn = n);
-//}
-
-
 module HoleCal(){
 	difference(){
 		cylinder(r=25, h=3, $fn=200);
@@ -1326,17 +1274,7 @@ module MorganBeltWheel2(){
 		MorganBeltWheel();
 		translate([0,0,7])			// Only widen pipe section
 			polyhole(40,22);
-			//cylinder(r=11*PipeFactor,h=40,$fn=100);
-		//cylinder(r=11, h=7, $fn=100);		// Bearings press fit
 		polyhole(7,22);
-		//cylinder(r=25/2, h=1.5, $fn=100);	// Flanged bearings
-		//polyhole(1.5, 25);						// not a good idea... messy prints
-
-		//Magnet Hole (5mm)
-		//rotate([0,0,155])
-		//	translate([72,0,7])
-				//cylinder(r=2.5, h=30, $fn=8);
-		//		polyhole(30,5);
 	}
 }
 
@@ -1345,17 +1283,7 @@ module MorganBeltWheel2_light(){
 		MorganBeltWheel_light();
 		translate([0,0,7])			// Only widen pipe section
 			polyhole(40,22);
-			//cylinder(r=11*PipeFactor,h=40,$fn=100);
-		//cylinder(r=11, h=7, $fn=100);		// Bearings press fit
 		polyhole(7,22);
-		//cylinder(r=25/2, h=1.5, $fn=100);	// Flanged bearings
-		//polyhole(1.5, 25);						// not a good idea... messy prints
-
-		//Magnet Hole (5mm)
-		//rotate([0,0,155])
-		//	translate([72,0,7])
-				//cylinder(r=2.5, h=30, $fn=8);
-		//		polyhole(30,5);
 	}
 }
 
@@ -1393,10 +1321,8 @@ module MorganBeltWheel()
 		for (sector = [0:3]){
 			rotate([0,0,sector*90]){
 				translate([44,0,0])
-					//cylinder(r=25,h=10,$fn=100);
 					polyhole(10,50);
 				translate([42,42,0])
-					//cylinder(r=10,h=10,$fn=100);
 					polyhole(10,20);
 
 				translate([-1.75,60,1.5])
@@ -1404,14 +1330,12 @@ module MorganBeltWheel()
 
 			}	
 		}
-		//cylinder(r=8,h=10);
 		polyhole(10,16);
 
 		
 		// Magnet hole 5mm
 		for (maghole = [0:7]){
 			rotate([0,0,maghole*360/8+22.5])
-			//rotate([0,0,155-40])
 				translate([71,0,7])
 					polyhole(30,5);
 		}				
@@ -1448,12 +1372,9 @@ module MorganBeltWheel_light(Radi = 100)
 						polyhole(10,Radi/1.55);
 				
 				translate([Radi/1.9,Radi/1.9,-1])
-					//cylinder(r=10,h=10,$fn=100);
 					rotate([135,90,0])
 						teardrop(Radi*.15,20, 90);
 
-				//translate([-1.75,60,1.5])
-					//cube([3.5,20,7]);
 
 			}	
 
@@ -1474,14 +1395,12 @@ module MorganBeltWheel_light(Radi = 100)
 				}
 			}
 
-		//cylinder(r=8,h=10);
 		polyhole(10,16);
 
 		
 		// Magnet hole 5mm
 		for (maghole = [0:7]){
 			rotate([0,0,maghole*360/8+22.5])
-			//rotate([0,0,155-40])
 				translate([Radi-5,0,2])
 					polyhole(30,5);
 		}		
@@ -1505,14 +1424,12 @@ module MorganPillar()
 		union(){
 			cylinder(r=12.5,h=27,$fn=100);
 			cylinder(r=14.5,h=20);
-			//cylinder(r=16,h=18);
 
 
 		}
 		translate([0,0,-1])
 			polyhole(h=32, d=22*PipeFactor);
-			//cylinder(r=11 * PipeFactor,h=32, $fn=100);
-
+	
 	}
 }
 
@@ -1528,17 +1445,14 @@ module MorganPillarMount()
 			cylinder(r=22,h=10, $fn=100);
 		}
 		translate([0,0,-1])
-			//cylinder(r=15,h=12, $fn=100);
 			polyhole(12,30);
 
 		translate([0,0,3])
-			//cylinder(r=18.5,h=8, $fn=100);
 			polyhole(8,37);
 
 		for (sign1 = [1,-1]){
 			for (sign2 = [1,-1]){
 				translate([sign1*19,sign2*19,-1])
-					//cylinder(r=2, h=5, $fn=10);
 					polyhole(5,4);
 			}
 		}
@@ -1558,21 +1472,17 @@ module MorganShaftMount()
 			cylinder(r=16,h=10, $fn=100);
 		}
 		translate([0,0,-1])
-			//cylinder(r=8,h=12, $fn=100);
 			polyhole(12,16);
 
 		translate([0,0,3])
-			//cylinder(r=22/2,h=8, $fn=100);
 			polyhole(8,22);
 
 		translate([0,0,8.5])
-			//cylinder(r=25/2, h=8, $fn=100);	// Flanged bearings
 			polyhole(8,25);			
 
 		for (sign1 = [1,-1]){
 			for (sign2 = [1,-1]){
 				translate([sign1*19,sign2*19,-1])
-					//cylinder(r=2, h=5, $fn=10);
 					polyhole(5,4);
 			}
 		}
@@ -1656,9 +1566,6 @@ module MorganZmountBot(rodspacing = 175, rodsize = 8) // Default morgan dimentio
 
 }
 
-//Beam(0,200);
-
-//SupportCylinder (r1 = 4, r2 = 7, h=10);
 
 module SupportCylinder(r1, r2, h,  slice = 0.4)
 {
@@ -1708,7 +1615,6 @@ module Bearing_stack()
 }
 
 
-
 module Extruder_Bowden_adaptor(support = true)
 {
 	//union(){
@@ -1716,19 +1622,15 @@ module Extruder_Bowden_adaptor(support = true)
 		union(){
 			translate([-11,11,15])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,40], center = true);
 			}
 			
-		//	cylinder(r=30/2, h=25);
-		//	cylinder(r=27/2, h=26);
-		//	cylinder(r=25/2, h=33, $fn = 50);
 			cylinder(r=15.8/2,h=35, $fn = 50);	
 		}
 			
 		translate([0,0,-1])	
 		union(){
-		//	cylinder(r=15.8/2,h=35, $fn = 50);
 			cylinder(r=4,h=80, $fn=36);
 		}
 		translate([0,0,4.76])	
@@ -1746,8 +1648,6 @@ module Extruder_Bowden_adaptor(support = true)
 	
 }
 
-//Fastener_stack();
-//%cylinder(r=6.5, h=45, $fn=100);
 
 module Fastener_stack()
 {
@@ -1774,10 +1674,6 @@ module BeamProfile(){
 	}
 }
 
-//translate([0,40,0])
-//	BeamProfile();
-//translate([0,-40,0])
-//	Beam();
 
 module SupBeamProfile(){
 	beamr = 13;
@@ -1792,8 +1688,6 @@ module SupBeamProfile(){
 module BeamCross(){
 
 	rotate([0,0,180]){
-		//translate([19,0,0])
-		//	square([35,3],center = true);
 		difference(){
 			BeamProfile();
 			translate([5,0,0])	
@@ -1823,9 +1717,6 @@ module Beam(StackRadius = 13, BeamLength = 150){
 				rotate([180,0,0])
 					teardrop(4, BeamLength, 90);
 
-			//translate([0,-8,13])
-			//	rotate([0,90,0])
-			//		cylinder(r=5, h=BeamLength, $fn = 10);
 		}
 
 		cylinder(r=StackRadius, h=40, $fn=50);
@@ -1900,8 +1791,6 @@ module Secondary_Arm(){
 	}
 	
 }
-//translate([50,0,0])
-//Hotend_stack();
 
 module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 {
@@ -1909,7 +1798,7 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 		union(){
 			translate([-11,11,5 + Hotend_H])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,14], center = true);
 			}
 			
@@ -1936,8 +1825,6 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 	
 }
 
-//Hotend_stack_2();
-
 module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 {
 	difference(){
@@ -1946,7 +1833,7 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 			translate([-11,11,20 + Hotend_H])
 				rotate([20,0,0])
 					difference(){
-						import("Base_and_Riser_2.stl");
+						import("lib/Base_and_Riser_2.stl");
 						cube([50,50,14], center = true);
 					}
 			
