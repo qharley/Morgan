@@ -1,4 +1,0 @@
-for file in ./*
-do
-  admesh $file -b $file
-done
