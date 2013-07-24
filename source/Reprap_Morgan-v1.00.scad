@@ -9,10 +9,10 @@ include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 
-LMxUU = 8;			// Choose linear bearing: 8 or 12mm
-rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
+LMxUU = 12;			// Choose linear bearing: 8 or 12mm
+rodspacing = 190;	// Distance between rods:	175 standard, 190 wide
 
-MakeMorgan(14);		// Select Part number to make	
+MakeMorgan(12);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
