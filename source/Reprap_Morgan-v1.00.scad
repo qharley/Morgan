@@ -13,7 +13,7 @@ include <lib/Thread_Library.scad>
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 160;	// Distance between rods:	160  Lite,  175 standard, 190 wide
 
-MakeMorgan(12);		// Select Part number to make	
+MakeMorgan(1);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -123,7 +123,8 @@ module MakeMorgan(partnumber)
 	}
 	
 	if (partnumber == 15 ){
-		MorganEndstop();
+		MorganEndstop(d=LMxUU);
+		
 	}
 
 	if (partnumber == 16 ){
@@ -299,22 +300,22 @@ module CalCube(){
 
 }
 
-module MorganEndstop()
+module MorganEndstop(d=8)
 {
 	difference(){
 		union(){
-			cylinder(r=6, h=10);
+			cylinder(r=(d/2)+2, h=10);
 
 			translate([9,0,1.5])
 				minkowski(){
-					cube([17,8,3],center=true);
-					cylinder(r=2, h=0.00001, $fn=12);
+					cube([13+(d/2),d,3],center=true);
+						cylinder(r=2, h=0.00001, $fn=12);
 				}
 
-			translate([-5,1,5])
+			translate([-d*0.625,1,5])
 				rotate([90,0,0])
 					minkowski(){
-						cube([7,6,12],center=true);
+						cube([d-1,6,d+4],center=true);
 						cylinder(r=2, h=2, $fn=12);
 					}
 
@@ -322,22 +323,22 @@ module MorganEndstop()
 		}
 
 		translate([0,0,-1])
-			polyhole(12,8);
+			polyhole(12,d);
 
 		translate([-12,0,5])
-			cube([20,8,12],center=true);
+			cube([20,d,12],center=true);
 
-		translate([15,0,1])
+		translate([11+(d/2),0,1])
 			cube([4,5,2.1], center=true);
-		translate([12,0,2.1])
+		translate([8+(d/2),0,2.1])
 			cube([4,5,2], center=true);
 
-		translate([-6,10,5])
+		translate([-d+2,10,5])
 			rotate([90,0,0])
 				polyhole(20,3);
 
-		translate([-6,11,5])
-			rotate([90,0,0])
+		translate([-d+2,d/2+2,5])
+			rotate([270,0,0])
 				cylinder(r=3.1, h=5, $fn =6);
 
 
