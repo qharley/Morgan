@@ -13,37 +13,38 @@ include <lib/Thread_Library.scad>
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 160;	// Distance between rods:	160  Lite,  175 standard, 190 wide
 
-MakeMorgan(1);		// Select Part number to make	
+MakeMorgan(18.1);		// Select Part number to make	
 
-//***********************************************************
-//**                                                			**
-//**    Select the number of the module to make				**
-//**																		**
-//**	01:	 PVC pipe support A (Ported, 458.5mm pipe)			**
+//************************************************************
+//**                                                				**
+//**    Select the number of the module to make						**
+//**																							**
+//**	01:	 PVC pipe support A (Ported, 458.5mm pipe)				**
 //**	02:	 PVC pipe support B (non Ported, 451.5mm pipe)		**
-//**	03: Z-mount Bottom												**
-//**	04: Z-mount Top													**
-//**	05: Motormount Short											**
-//**	06: Motormount Tall											**
-//**	07: Rod mounted Drivewheel									**
-//**	08: Tube mounted Drivewheel									**
-//**	09: 22mm Tube 6805 bearing adaptor							**
-//**	10: Bed arm Left												**
-//**	11: Bed arm Right												**
-//** 	12:	 Bed Z-bracket and lead screw holder					**
-//**	13: Bed rear mounting clips									**
-//**	14: Bed front mounting clips									**
-//**	15: hall-endstop holders										**
-//**	16: Z-Lead screw motor shaft coupler						**
-//**	17: Arm PSI A (inner supporting arm)						**
-//**	18: Arm PSI B (outer supporting arm)						**
-//**	19: Arm Theta A (inner steering arm)						**
-//**	20: Arm Theta B (outer steering arm)						**
-//**	21: Morgan Tool head (make from ABS/Nylon/etc)		**
-//**	22: Lead screw nut (Alpen 8mm SDS)	
-//**	23: extruder Bowden adaptor
-//**	24: Morgan Spool holder
-//**	25:	 Motor pulley for fishline drive					
+//**	03: Z-mount Bottom															**
+//**	04: Z-mount Top																**
+//**	05: Motormount Short														**
+//**	06: Motormount Tall															**
+//**	07: Rod mounted Drivewheel												**
+//**	08: Tube mounted Drivewheel												**
+//**	09: 22mm Tube 6805 bearing adaptor									**
+//**	10: Bed arm Left																**
+//**	11: Bed arm Right																**
+//** 12:	 Bed Z-bracket and lead screw holder						**
+//**	13: Bed rear mounting clips												**
+//**	14: Bed front mounting clips											**
+//**	15: hall-endstop holders													**
+//**	16: Z-Lead screw motor shaft coupler								**
+//**	17: Arm PSI A (inner supporting arm)								**
+//**	18: Arm PSI B (outer supporting arm)								**
+//**	18.1: Arm PSI B with toolhead integrated (experimental)**
+//**	19: Arm Theta A (inner steering arm)								**
+//**	20: Arm Theta B (outer steering arm)								**
+//**	21: Morgan Tool head (make from ABS/Nylon/etc)				**
+//**	22: Lead screw nut (Alpen 8mm SDS)									**
+//**	23: extruder Bowden adaptor												**
+//**	24: Morgan Spool holder													**
+//**	25:	 Motor pulley for braided fishline drive				**
 //**
 //**  TO DO!  Build Plates...
 //**		Select number of build plate
@@ -134,7 +135,7 @@ module MakeMorgan(partnumber)
 	if (partnumber == 17 ){
 		Primary_Arm();
 	}
-	if (partnumber == 18 ){
+	if (round(partnumber) == 18 ){
 		Secondary_Arm();
 	}
 	if (partnumber == 19 ){
@@ -143,7 +144,7 @@ module MakeMorgan(partnumber)
 	if (partnumber == 20 ){
 		Sup_Arm2();
 	}
-	if (partnumber == 21 ){
+	if (partnumber == 21 || partnumber == 18.1 ){
 		Secondary_Arm_hotend_holder(Hotend_D = 16.5, Hotend_H = 12);
 	}
 	if (partnumber == 22 ){
