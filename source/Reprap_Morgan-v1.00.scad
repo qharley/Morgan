@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------
-// RepRap "Morgan", main ver 1.00
+// RepRap "Morgan", main ver 1.01 (Lite version)
 // Copyright 2012, 2013. Author: Quentin Harley (qharley)
 // This original design is licensed under GPLv2.
 //
@@ -9,11 +9,18 @@ include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 include <lib/Thread_Library.scad>
+use <lib/Bowden_Clamp_2.scad>
 
 LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 160;	// Distance between rods:	160  Lite,  175 standard, 190 wide
 
-MakeMorgan(18.1);		// Select Part number to make	
+tubeRadius = 2;		// Bowden Tube Radius...
+
+//riserTube();
+//tighteningCone(2);
+//cap();
+
+MakeMorgan(21);		// Select Part number to make	
 
 //************************************************************
 //**                                                				**
@@ -874,203 +881,7 @@ module MorganMotorMount4(Height = 50, Mheight = 52){
 
 }
 
-/*
-module MorganMotorMount3(Height = 50, Mheight = 52){
 
-	if (Height < Mheight+2)
-	{
-		echo ("Help");
-	}	
-	   
-	difference(){
-		union(){
-			Motor(Height+2, 48);
-
-			for(i=[0,90])
-				rotate([0,0,i])
-					translate([30,0,0])
-						difference(){
-							cylinder(r=9, h=3);
-							translate([4,0,0])
-							polyhole(3,4);
-						}
-
-			for(i=[170,280])
-				rotate([0,0,i])
-					translate([32,0,0])
-						difference(){
-							cylinder(r=8, h=3);
-							translate([2,0,0])
-							polyhole(3,4);
-						}
-
-			
-		}
-		translate([0,0,0])
-			Motor(Height, 44);
-
-		translate([25,25,Height - 11])
-			rotate([0,45,45])
-				cube([100,100,50],center=true);		
-		translate([9,9,Height])
-			rotate([0,0,45])
-				cube([50,44,50],center=true);
-
-
-
-
-		translate([-20,-20,Height*.45])
-			rotate([0,-45,45])
-				cube([Height*.71,44,Height],center=true);
-
-		translate([-20,-20,Height*.318])
-			rotate([0,0,45])
-				translate([-15,-18,0])
-					cube([30,36,Height*.58]);
-		
-		*translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		*for(i=[0,90,180,270])
-			rotate([0,0,i])
-				translate([18,0,0])
-					polyhole(2,3);
-
-		*for(i=[45, 135])
-			//translate([-35,-35,Height/2])
-				rotate([0,90,i])
-				translate([-Height/2,0,-50])
-					polyhole(100,30);
-
-		translate([0,0,Height/3])
-			rotate([0,0,135])
-				teardrop(10, 50, 90);
-		translate([-7.5,-7.5,Height*.67])
-			rotate([0,0,135])
-				teardrop(5, 50, 90);
-		//polyhole(Height+20,22);
-		rotate([0,0,-45])
-			cube([42,25,30],center=true);
-
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-				translate([22,0,Height+1.2])
-					rotate([0,0,30])
-						polyhole(20,3);
-   		}
-	}
-
-
-
-}
-
-module MorganMotorMount2(Height = 50, Mheight = 52){
-
-	if (Height < Mheight+2)
-	{
-		echo ("Help");
-	}	
-	   
-	difference(){
-		union(){
-			Motor(Height, 46);
-			
-		}
-		translate([0,0,2])
-			Motor(Height+20, 42);
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,15,Height],center=true);
-				cube([15,100,Height],center=true);
-			}
-		
-		translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		for(i=[0,90,180,270])
-			rotate([0,0,i])
-				translate([18,0,0])
-					polyhole(2,3);
-				
-		polyhole(2,22);
-	}
-
-
-	difference(){
-		intersection(){
-			Motor(Height);
-			for (i=[0,90,180,270]){
-				rotate([0,0,i]){
-					translate([20,-20,Height-2])
-						cube([12,40,2]);
-					translate([20,-20,Height-2-Mheight])
-						cube([12,40,2]);
-
-				}
-			}
-		}
-		
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-				translate([22,0,Height - 1.4])
-					rotate([0,0,30])
-						polyhole(2,3);
-   		}
-
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,15,Height],center=true);
-				cube([15,100,Height],center=true);
-			}
-	}
-}
-
-module MorganMotorMount(Height = 50){
-   intersection(){
-	difference(){
-		union(){
-			Motor(Height);
-			for(i=[0,90,180,270]){
-				//difference(){
-					rotate([0,0,i])
-						translate([25,0,Height+2])
-							rotate([0,45,0])
-							rotate([0,0,45])
-								cube([20,20,20],center=true);
-				//	polyhole(20,2);
-				//}
-			}
-		}
-		translate([0,0,2])
-			scale(.9)
-				Motor(Height+20);
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,20,Height],center=true);
-				cube([20,100,Height],center=true);
-			}
-		polyhole(2,22);
-
-		translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-			{
-				translate([33,0,Height-8])
-					polyhole(10,2);
-
-				translate([22,0,0])
-					polyhole(2,3);
-			}
-		}
-	}
-
-   	cylinder(r=39, h=Height+10, $fn=100);
-
-   }
-}
-*/
 
 module PipeCuttingTemplate(PipeOD, ){
 	difference(){	
@@ -1798,19 +1609,72 @@ module Secondary_Arm(){
 	
 }
 
+// Bowden tube holder - Taken from Airtripper's bowden extruder v3
+
+module Bowden_tube_holder(tube_factor = 1.75){
+	scale(tube_factor / 1.75 )
+	translate([0,0,3.5])
+	rotate([90,0,0])
+	difference() {
+		translate([0,.5,0]) cube([14,8,8], center = true);
+			
+		union() {
+			// Tube and filament holes
+			translate([0,13,0]) rotate([90,0,0]) cylinder(16, r=2.25, $fn=25);
+			translate([0,3,0]) rotate([90,0,0]) cylinder(20, r=1.1, $fn=25);	
+			
+			// m4 nut slot
+			translate([0,0,0]) cube([7.45,3.45,10.5], center = true);
+			translate([0,3,4.5]) cube([4.5,3.2,9.2], center = true);	
+
+			
+		}
+	}
+}
+
+//translate([0,10,0])
+//Bowden_filament_guide();
+
+module Bowden_filament_guide(){
+
+	difference(){
+		union(){
+			cylinder(r=4, h=35);
+			translate([0,0,35])
+				Bowden_tube_holder();
+		}
+
+		translate([0,0,-1])
+			//polyhole(30,2);
+			cylinder(40, r=2.25, $fn=25);	
+	}
+
+}
+
 module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 {
 	difference(){
 		union(){
-			translate([-11,11,5 + Hotend_H])
-				difference(){
-					import("lib/Base_and_Riser_2.stl");
-					cube([50,50,14], center = true);
-			}
+			//translate([-11,11,5 + Hotend_H])
+				//difference(){
+					//import("lib/Base_and_Riser_2.stl");
+					//riserTube(tubeRadius);
+				translate([0,0,0])
+					Bowden_filament_guide();
+					//cube([50,50,14], center = true);
+			//}
 			
-			cylinder(r=30/2, h=14 + Hotend_H, $fn=50);
-			cylinder(r=27/2, h=15 + Hotend_H, $fn = 50);
-			cylinder(r=25/2, h=23 + Hotend_H, $fn = 50);	
+			difference(){
+				union(){
+					cylinder(r=30/2, h=14 + Hotend_H, $fn=50);
+					cylinder(r=27/2, h=15 + Hotend_H, $fn = 50);
+					cylinder(r=25/2, h=23 + Hotend_H, $fn = 50);
+				}
+				translate([0,0,5 + Hotend_H])
+					cylinder(r=4, h=50, $fn=36);
+				cylinder(r=tubeRadius+0.8, h=100, $fn=36);
+			}
+				
 		}
 			
 		translate([0,0,-1])	
@@ -1819,9 +1683,10 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 			//translate([0,0,Hotend_H])
 			//	cylinder(r=1.5, h=5, $fn=36);
 			translate([0,0,Hotend_H])
-				cylinder(r=3, h=8, $fn=36);
+			%	cylinder(r=3, h=8, $fn=36);
 			translate([0,0,Hotend_H+8])
-				cylinder(r1=3,r2 = 3.9,h=16, $fn=36);
+			%	cylinder(r1=3,r2 = 3.9,h=16, $fn=36);
+			
 		}
 
 		rotate([0,45,0])
@@ -1839,7 +1704,8 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 			translate([-11,11,20 + Hotend_H])
 				rotate([20,0,0])
 					difference(){
-						import("lib/Base_and_Riser_2.stl");
+						//import("lib/Base_and_Riser_2.stl");
+						
 						cube([50,50,14], center = true);
 					}
 			
@@ -1922,12 +1788,14 @@ module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12){
 
 		// Subtract the beam
 		translate([0,0,Hotend_H-10])
-			Beam(StackRadius = 30/2);
+			Beam(StackRadius = 30/2);	
 		}
 	}
 	//SupportCylinder (r1 = 2, r2 = 7, h=10);
 	translate([0,0,Hotend_H-1])
 		cylinder(r=Hotend_D / 2, h=.4);
+
+
 }
 
 module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12){
