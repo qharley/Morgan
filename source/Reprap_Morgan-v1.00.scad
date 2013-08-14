@@ -1609,14 +1609,14 @@ module Secondary_Arm(){
 	
 }
 
-// Bowden tube holder - Taken from Airtripper's bowden extruder v3
+// Bowden tube holder - Taken and modified from Airtripper's bowden extruder v3
 
 module Bowden_tube_holder(tube_factor = 1.75){
 	scale(tube_factor / 1.75 )
 	translate([0,0,3.5])
 	rotate([90,0,0])
 	difference() {
-		translate([0,.5,0]) cube([14,8,8], center = true);
+		translate([0,.5,-1]) cube([14,8,10], center = true);
 			
 		union() {
 			// Tube and filament holes
@@ -1624,7 +1624,7 @@ module Bowden_tube_holder(tube_factor = 1.75){
 			translate([0,3,0]) rotate([90,0,0]) cylinder(20, r=1.1, $fn=25);	
 			
 			// m4 nut slot
-			translate([0,0,0]) cube([7.45,3.45,10.5], center = true);
+			translate([0,0,1]) cube([7.45,3.45,10], center = true);
 			translate([0,3,4.5]) cube([4.5,3.2,9.2], center = true);	
 
 			
