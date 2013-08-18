@@ -9,10 +9,11 @@ include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 
-LMxUU = 12;			// Choose linear bearing: 8 or 12mm
-rodspacing = 190;	// Distance between rods:	175 standard, 190 wide
+LMxUU = 8;			// Choose linear bearing: 8 or 12mm
+rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
+PVC_pipe_ID = 26.5;	// measure pipe ID to adjust
 
-MakeMorgan(12);		// Select Part number to make	
+MakeMorgan(01);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -55,10 +56,10 @@ MakeMorgan(12);		// Select Part number to make
 module MakeMorgan(partnumber)
 {
 	if (partnumber == 1 ){
-		MorganPVCsupport_ANG(26.5,130,130,420, pipe = false, port=true);	// 458.47
+		MorganPVCsupport_ANG(PVC_pipe_ID,130,130,420, pipe = false, port=true);	// 458.47
 	}
 	if (partnumber == 2 ){
-		MorganPVCsupport_ANG(26.5,70,150,420, pipe = false);					// 451.44
+		MorganPVCsupport_ANG(PVC_pipe_ID,70,150,420, pipe = false);					// 451.44
 	}
 	
   rotate([0,0,45]){ 					// parts rotated through 45deg to ease fitting to RepRap heatbed
@@ -1234,7 +1235,7 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 
 	difference(){
 		union(){
-			cylinder(r=(PipeID+6)/2, h=5, $fn = 100);
+			cylinder(r=(PipeID+2)/2, h=5, $fn = 100);
 			rotate([deg_y,deg_x,0]){
 				
 				difference(){
@@ -1256,10 +1257,15 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 							rotate_extrude(convexity = 10, $fn = 100)
 								translate([(PipeID)/2-1.5,0,0])
 									circle(r=2, $fn = 20);	
+
+							translate([0,0,15])
+							rotate_extrude(convexity = 10, $fn = 100)
+								translate([(PipeID)/2-1.5,0,0])
+									circle(r=2, $fn = 20);	
 						
 					}
 					translate([0,0,-5])
-						cylinder(r=(PipeID-4)/2, h=43, $fn=100); 
+						cylinder(r=(PipeID-4)/2, h=45, $fn=100); 
 				}
 				
 			}
