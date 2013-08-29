@@ -20,7 +20,7 @@ tubeRadius = 2;		// Bowden Tube Radius...
 //tighteningCone(2);
 //cap();
 
-MakeMorgan(21);		// Select Part number to make	
+MakeMorgan();		// Select Part number to make	
 
 //************************************************************
 //**                                                				**
@@ -1181,16 +1181,16 @@ module MorganBeltWheel_light(Radi = 100)
 
 		 
 		}
-	
+/*	
 		for (sector = [0:3]){
 			rotate([0,0,sector*90]){
 				//linear_extrude(height = 1, twist = 45, convexity = 10)
 					translate([(Radi-25)/2+Radi*.2,0,-1])
 						polyhole(10,Radi/1.55);
 				
-				translate([Radi/1.9,Radi/1.9,-1])
-					rotate([135,90,0])
-						teardrop(Radi*.15,20, 90);
+				//translate([Radi/1.9,Radi/1.9,-1])
+					//rotate([135,90,-45])
+						//teardrop(Radi*.15,20, 90);
 
 
 			}	
@@ -1198,18 +1198,18 @@ module MorganBeltWheel_light(Radi = 100)
 			
 					
 		}
-
+*/
 		translate([0,0,-1])	
-			intersection(){
+			//intersection(){
 				difference(){
 					polyhole(10, Radi*1.8);
 					polyhole(10, 50);
-				}
+	/*			}
 				union(){
 					cube([100,100,10]);
 					rotate([0,0,180])
 						cube([100,100,10]);
-				}
+				}*/
 			}
 
 		polyhole(10,16);
