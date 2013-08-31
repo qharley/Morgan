@@ -13,7 +13,7 @@ LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
 PVC_pipe_ID = 26.5;	// measure pipe ID to adjust
 
-MakeMorgan(01);		// Select Part number to make	
+MakeMorgan(21);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
