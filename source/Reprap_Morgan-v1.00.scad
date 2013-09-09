@@ -13,7 +13,9 @@ LMxUU = 8;			// Choose linear bearing: 8 or 12mm
 rodspacing = 175;	// Distance between rods:	175 standard, 190 wide
 PVC_pipe_ID = 26.5;	// measure pipe ID to adjust
 
-MakeMorgan(21);		// Select Part number to make	
+ENVOLOPE_CHECK = false;
+
+MakeMorgan(12);		// Select Part number to make	
 
 //***********************************************************
 //**                                                			**
@@ -217,8 +219,10 @@ module MakeMorgan(partnumber)
 // **  Here be dragons...
 
 //** print envelope check - only in F5 review
+if(ENVELOPE_CHECK){
 	translate([0,0,50])
 		%cube([200,200,100], center=true);
+}
 
 module Matrix_test()
 {
@@ -239,80 +243,10 @@ module Matrix_test()
 
 PipeFactor = 40/39.2;			// Multiplication factor for inner diameter 
 
-
-
-
 //MorganFrame();
 
 pipeselect = false; // Show pipes in frame... default false
 
-//MorganPVCsupport_ANG(26.5,130,130,420, pipe = false, port=true);	// 458.47
-//MorganPVCsupport_ANG(26.5,70,150,420, pipe = false);					// 451.44
-
-//MorganEndstop();
-
-//MorganMotorMount4(Height = 50);
-//MorganMotorMount4(Height = 70);
-
-
-
-//translate([-90,-90,0])
-//	Matrix_test();
-
-
-
-//MorganPillar();				// 6805 bearing tube mount
-
-//MorganBeltWheel();			// Rod mounted belt drive wheel
-//MorganBeltWheel2();			// Tube mounted belt drive wheel
-
-//MorganPVCsupport(29);
-//PipeCuttingTemplate(32);
-
-//MorganSpoolHolder(PipeOD = 32, PipeID=29);
-
-
-rotate([0,0,45]){
-//	MorganBedarmLeft(21.5);
-//	translate([30,0,0])
-//		MorganBedarmRight(21.5);
-//	Bed_stabil_bracket(21.5);
-//MorganZmountTop(195, 12);
-//MorganZmountBot(195, 12);
-}
-
-//BedMountRear();
-
-
-//leadscrew_nut();
-
-// **************** Parts **********************
-//translate([0,0,5])
-//	cylinder(r=14.72/2, h=5, $fn=6);
-//linear_extrude(height = 42)
-//	nutHole(8, proj = 1);
-//boltHole(8);
-
-//Primary_Arm();
-//Secondary_Arm();
-
-//intersection(){
-//	Fastener_stack();
-//	cylinder(r=20, h=5);
-//}
-
-//Secondary_Arm_hotend_holder(Hotend_D = 16.5, Hotend_H = 12);  // Make out of ABS...
-//Secondary_Arm_hotend_holder_2(Hotend_D = 16.5, Hotend_H = 12);  // Make out of ABS...
-//translate([40,0,0])
-//Extruder_Bowden_adaptor();
-
-//Sup_Arm1();
-//Sup_Arm2();
-
-
-
-// *********** Misc **************8
-// bolt_hobber();
 
 // ************** Building Blocks *************
 // MorganPillarMount();
@@ -350,38 +284,6 @@ module leadscrew_nut(){
 
 }
 
-module bolt_hobber()
-{
-	difference(){
-		
-
-		translate([0,0,7]){
-			rotate([90,0,0]){
-				cylinder(r=7.8/2, h=50, $fn = 20);
-				cylinder(r=10, h=10, $fn = 12);
-			}
-		}	
-
-	}
-}
-
-module CalCylinder()
-{
-	cylinder(r=20, h=10, $fn = 200);
-
-
-}
-
-module CalCross()
-{
-	cube([200,10,10], center=true);
-	cube([10,200,10],center=true);
-}
-
-module CalCube(){
-	cube([20,20,20]);
-
-}
 
 module MorganEndstop()
 {
@@ -432,10 +334,6 @@ module MorganEndstop()
 
 
 
-
-
-		
-
 module MorganF(){
 
 		MorganPVCsupport_ANG(29,130,130,420, pipe = pipeselect);		// 458.47
@@ -444,9 +342,6 @@ module MorganF(){
 	
 
 }
-
-//translate([200,0,0])
-//	cube([10,10,420]);
 
 module MorganFrame(){
 
@@ -526,22 +421,33 @@ module Bed_stabil_bracket(bsize = 15.5){
 				}
 			difference(){
 			  union(){
-				translate([0,-14.5,25])
-					cube([rodspacing-bsize+10,3,50],center=true);
+				translate([0,-14.5,25]){
+					cube([rodspacing,3,50],center=true);
+						
+				}
 			
-				translate([rodspacing/2,-12,0])
-					rotate([0,0,-160])
-						cube([rodspacing/2, 3, 50]);
-				mirror()
-					translate([rodspacing/2,-12,0])
-						rotate([0,0,-160])
-							cube([rodspacing/2, 3, 50]);
+				//translate([rodspacing/2,-12,0])
+				//	rotate([0,0,-160])
+				//		#cube([rodspacing/2, 3, 50]);
+				//mirror()
+				//	translate([rodspacing/2,-12,0])
+				//		rotate([0,0,-160])
+				//			cube([rodspacing/2, 3, 50]);
+
+				translate([0,-25.5,1.5]){
+					intersection(){
+						cube ([rodspacing+20, 25, 3],center=true);
+						translate([0,rodspacing*1.5-6,-2])	
+							cylinder(r=rodspacing*1.5, h=5, $fn = 50);
+
+					}			
+				}
 			  }
 		
 			  translate([rodspacing/2,0,0])
-					#cylinder(r=bsize*0.8, h=50);
+					cylinder(r=bsize*0.8, h=50);
 			  translate([rodspacing/-2,0,0])
-					#cylinder(r=bsize*0.8, h=50);	
+					cylinder(r=bsize*0.8, h=50);	
 			}		
 
 	
@@ -552,8 +458,8 @@ module Bed_stabil_bracket(bsize = 15.5){
 
 			translate([0,-20,5])
 				cube([22,40,10],center=true);
-			translate([0,-20,48.5])
-				cube([12,40,3],center=true);
+			///translate([0,-20,48.5])
+				//cube([12,40,3],center=true);
 		}
 
 		cylinder(r=19,h=50);
@@ -576,8 +482,8 @@ module Bed_stabil_bracket(bsize = 15.5){
 		translate([0,-40,6.5])
 			cylinder(r=4.5, h=10);
 
-		translate([rodspacing/-2+LMxUU/1.5, LMxUU*-1.75, 0])
-			cylinder(r=2.5, h=3);
+		translate([rodspacing/-2+LMxUU/1.5, LMxUU*-1.756, 0])
+			polyhole(3,5);//r=2.5, h=3);
 	
 	}
 }
@@ -913,203 +819,6 @@ module MorganMotorMount4(Height = 50, Mheight = 52){
 }
 
 
-module MorganMotorMount3(Height = 50, Mheight = 52){
-
-	if (Height < Mheight+2)
-	{
-		echo ("Help");
-	}	
-	   
-	difference(){
-		union(){
-			Motor(Height+2, 48);
-
-			for(i=[0,90])
-				rotate([0,0,i])
-					translate([30,0,0])
-						difference(){
-							cylinder(r=9, h=3);
-							translate([4,0,0])
-							polyhole(3,4);
-						}
-
-			for(i=[170,280])
-				rotate([0,0,i])
-					translate([32,0,0])
-						difference(){
-							cylinder(r=8, h=3);
-							translate([2,0,0])
-							polyhole(3,4);
-						}
-
-			
-		}
-		translate([0,0,0])
-			Motor(Height, 44);
-
-		translate([25,25,Height - 11])
-			rotate([0,45,45])
-				cube([100,100,50],center=true);		
-		translate([9,9,Height])
-			rotate([0,0,45])
-				cube([50,44,50],center=true);
-
-
-
-
-		translate([-20,-20,Height*.45])
-			rotate([0,-45,45])
-				cube([Height*.71,44,Height],center=true);
-
-		translate([-20,-20,Height*.318])
-			rotate([0,0,45])
-				translate([-15,-18,0])
-					cube([30,36,Height*.58]);
-		
-		*translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		*for(i=[0,90,180,270])
-			rotate([0,0,i])
-				translate([18,0,0])
-					polyhole(2,3);
-
-		*for(i=[45, 135])
-			//translate([-35,-35,Height/2])
-				rotate([0,90,i])
-				translate([-Height/2,0,-50])
-					polyhole(100,30);
-
-		translate([0,0,Height/3])
-			rotate([0,0,135])
-				teardrop(10, 50, 90);
-		translate([-7.5,-7.5,Height*.67])
-			rotate([0,0,135])
-				teardrop(5, 50, 90);
-		//polyhole(Height+20,22);
-		rotate([0,0,-45])
-			cube([42,25,30],center=true);
-
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-				translate([22,0,Height+1.2])
-					rotate([0,0,30])
-						polyhole(20,3);
-   		}
-	}
-
-
-
-}
-
-module MorganMotorMount2(Height = 50, Mheight = 52){
-
-	if (Height < Mheight+2)
-	{
-		echo ("Help");
-	}	
-	   
-	difference(){
-		union(){
-			Motor(Height, 46);
-			
-		}
-		translate([0,0,2])
-			Motor(Height+20, 42);
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,15,Height],center=true);
-				cube([15,100,Height],center=true);
-			}
-		
-		translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		for(i=[0,90,180,270])
-			rotate([0,0,i])
-				translate([18,0,0])
-					polyhole(2,3);
-				
-		polyhole(2,22);
-	}
-
-
-	difference(){
-		intersection(){
-			Motor(Height);
-			for (i=[0,90,180,270]){
-				rotate([0,0,i]){
-					translate([20,-20,Height-2])
-						cube([12,40,2]);
-					translate([20,-20,Height-2-Mheight])
-						cube([12,40,2]);
-
-				}
-			}
-		}
-		
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-				translate([22,0,Height - 1.4])
-					rotate([0,0,30])
-						polyhole(2,3);
-   		}
-
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,15,Height],center=true);
-				cube([15,100,Height],center=true);
-			}
-	}
-}
-
-module MorganMotorMount(Height = 50){
-   intersection(){
-	difference(){
-		union(){
-			Motor(Height);
-			for(i=[0,90,180,270]){
-				//difference(){
-					rotate([0,0,i])
-						translate([25,0,Height+2])
-							rotate([0,45,0])
-							rotate([0,0,45])
-								cube([20,20,20],center=true);
-				//	polyhole(20,2);
-				//}
-			}
-		}
-		translate([0,0,2])
-			scale(.9)
-				Motor(Height+20);
-		translate([0,0,Height/2+2])
-			rotate([0,0,45]){	
-				cube([100,20,Height],center=true);
-				cube([20,100,Height],center=true);
-			}
-		polyhole(2,22);
-
-		translate([0,0,Height*1.5+2])
-			cube([100,100,Height],center=true);	
-
-		for(i=[0,90,180,270]){
-			rotate([0,0,i])
-			{
-				translate([33,0,Height-8])
-					polyhole(10,2);
-
-				translate([22,0,0])
-					polyhole(2,3);
-			}
-		}
-	}
-
-   	cylinder(r=39, h=Height+10, $fn=100);
-
-   }
-}
-
-
 module PipeCuttingTemplate(PipeOD, ){
 	difference(){	
 		union(){
@@ -1240,8 +949,8 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 				
 				difference(){
 					union(){
-						translate([0,0,-5])
-							cylinder(r=(PipeID+6)/2, h=15, $fn = 100);
+						translate([0,0,-10])
+							cylinder(r=(PipeID+6)/2, h=20, $fn = 100);
 					
 					// shaft body
 						cylinder(r=(PipeID)/2, h=35, $fn = 100);
@@ -1265,7 +974,7 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 						
 					}
 					translate([0,0,-5])
-						cylinder(r=(PipeID-4)/2, h=45, $fn=100); 
+						cylinder(r=(PipeID-5)/2, h=45, $fn=100); 
 				}
 				
 			}
@@ -1306,12 +1015,6 @@ module MorganPVCsupport_ANG(PipeID = 29, target_x = 0, target_y = 0, target_z=1,
 
 }
 
-//module polyhole(h, d) {
-//    n = max(round(2 * d),3);
-//    rotate([0,0,180])
-//        cylinder(h = h, r = (d / 2) / cos (180 / n), $fn = n);
-//}
-
 
 module HoleCal(){
 	difference(){
@@ -1331,17 +1034,8 @@ module MorganBeltWheel2(){
 		MorganBeltWheel();
 		translate([0,0,7])			// Only widen pipe section
 			polyhole(40,22);
-			//cylinder(r=11*PipeFactor,h=40,$fn=100);
-		//cylinder(r=11, h=7, $fn=100);		// Bearings press fit
 		polyhole(7,22);
-		//cylinder(r=25/2, h=1.5, $fn=100);	// Flanged bearings
-		//polyhole(1.5, 25);						// not a good idea... messy prints
 
-		//Magnet Hole (5mm)
-		//rotate([0,0,155])
-		//	translate([72,0,7])
-				//cylinder(r=2.5, h=30, $fn=8);
-		//		polyhole(30,5);
 	}
 }
 
@@ -1412,13 +1106,11 @@ module MorganPillar()
 		union(){
 			cylinder(r=12.5,h=27,$fn=100);
 			cylinder(r=14.5,h=20);
-			//cylinder(r=16,h=18);
 
 
 		}
 		translate([0,0,-1])
 			polyhole(h=32, d=22*PipeFactor);
-			//cylinder(r=11 * PipeFactor,h=32, $fn=100);
 
 	}
 }
@@ -1435,17 +1127,14 @@ module MorganPillarMount()
 			cylinder(r=22,h=10, $fn=100);
 		}
 		translate([0,0,-1])
-			//cylinder(r=15,h=12, $fn=100);
-			polyhole(12,30);
+				polyhole(12,30);
 
 		translate([0,0,3])
-			//cylinder(r=18.5,h=8, $fn=100);
 			polyhole(8,37);
 
 		for (sign1 = [1,-1]){
 			for (sign2 = [1,-1]){
 				translate([sign1*19,sign2*19,-1])
-					//cylinder(r=2, h=5, $fn=10);
 					polyhole(5,4);
 			}
 		}
@@ -1465,21 +1154,17 @@ module MorganShaftMount()
 			cylinder(r=16,h=10, $fn=100);
 		}
 		translate([0,0,-1])
-			//cylinder(r=8,h=12, $fn=100);
 			polyhole(12,16);
 
 		translate([0,0,3])
-			//cylinder(r=22/2,h=8, $fn=100);
 			polyhole(8,22);
 
 		translate([0,0,8.5])
-			//cylinder(r=25/2, h=8, $fn=100);	// Flanged bearings
 			polyhole(8,25);			
 
 		for (sign1 = [1,-1]){
 			for (sign2 = [1,-1]){
 				translate([sign1*19,sign2*19,-1])
-					//cylinder(r=2, h=5, $fn=10);
 					polyhole(5,4);
 			}
 		}
@@ -1563,10 +1248,6 @@ module MorganZmountBot(rodspacing = 175, rodsize = 8) // Default morgan dimentio
 
 }
 
-//Beam(0,200);
-
-//SupportCylinder (r1 = 4, r2 = 7, h=10);
-
 module SupportCylinder(r1, r2, h,  slice = 0.4)
 {
 	union()
@@ -1588,10 +1269,8 @@ module SupportCylinder(r1, r2, h,  slice = 0.4)
 module Bearing_recess (){		// Single recess
 	intersection(){
 		cylinder(r=11,8);	
-		//cylinder(10,20,7);
 		
 	}
-	//cylinder(r=14,1.5);			// Washer recess
 }
 
 module Bearing_group (){			// Top and bottom
@@ -1627,15 +1306,11 @@ module Extruder_Bowden_adaptor(support = true)
 					cube([50,50,40], center = true);
 			}
 			
-		//	cylinder(r=30/2, h=25);
-		//	cylinder(r=27/2, h=26);
-		//	cylinder(r=25/2, h=33, $fn = 50);
 			cylinder(r=15.8/2,h=35, $fn = 50);	
 		}
 			
 		translate([0,0,-1])	
 		union(){
-		//	cylinder(r=15.8/2,h=35, $fn = 50);
 			cylinder(r=4,h=80, $fn=36);
 		}
 		translate([0,0,4.76])	
@@ -1653,8 +1328,6 @@ module Extruder_Bowden_adaptor(support = true)
 	
 }
 
-//Fastener_stack();
-//%cylinder(r=6.5, h=45, $fn=100);
 
 module Fastener_stack()
 {
@@ -1681,10 +1354,6 @@ module BeamProfile(){
 	}
 }
 
-//translate([0,40,0])
-//	BeamProfile();
-//translate([0,-40,0])
-//	Beam();
 
 module SupBeamProfile(){
 	beamr = 13;
@@ -1699,8 +1368,6 @@ module SupBeamProfile(){
 module BeamCross(){
 
 	rotate([0,0,180]){
-		//translate([19,0,0])
-		//	square([35,3],center = true);
 		difference(){
 			BeamProfile();
 			translate([5,0,0])	
@@ -1730,9 +1397,6 @@ module Beam(StackRadius = 13, BeamLength = 150){
 				rotate([180,0,0])
 					teardrop(4, BeamLength, 90);
 
-			//translate([0,-8,13])
-			//	rotate([0,90,0])
-			//		cylinder(r=5, h=BeamLength, $fn = 10);
 		}
 
 		cylinder(r=StackRadius, h=40, $fn=50);
@@ -1807,7 +1471,9 @@ module Secondary_Arm(){
 	}
 	
 }
-//translate([50,0,0])
+translate([50,0,0])
+	linear_extrude(height = 110)
+		nutHole(4);
 //Hotend_stack();
 
 module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
@@ -1877,7 +1543,7 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 	
 }
 
-module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12){
+module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12c){
 	difference(){
 		
 		union(){
@@ -1937,6 +1603,12 @@ module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12){
 		// Subtract the beam
 		translate([0,0,Hotend_H-10])
 			Beam(StackRadius = 30/2);
+
+		// M4 inner section  for 1.75 filament support
+		translate([0,0,0])
+			linear_extrude(h=400)
+				projection()
+					nutHole(4, tolerance = 0.5);
 		}
 	}
 	//SupportCylinder (r1 = 2, r2 = 7, h=10);
@@ -2002,6 +1674,11 @@ module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12){
 		// Subtract the beam
 		translate([0,0,Hotend_H-10])
 			Beam(StackRadius = 30/2);
+
+		// M4 inner section  for 1.75 filament support
+		translate([0,0,Hotend_H+3])
+			linear_extrude(height=200)
+				nutHole(4);
 		}
 	}
 	//SupportCylinder (r1 = 2, r2 = 7, h=10);
@@ -2076,9 +1753,6 @@ module Sup_Arm2(){
 				cylinder(r=37/2, h=8, $fn = 50);
 				rotate([0,45,0])
 					cube([1,50,1],center=true);
-				//translate([150,0,0])
-				//	rotate([0,45,0])
-				//		cube([1,30,1],center=true);
 	}	
 }
 
