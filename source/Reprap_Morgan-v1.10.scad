@@ -16,9 +16,17 @@ THREADLESS = false;	// True for use of threadless ball screw in z-bracket
 SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (lasercut)
 
 ENVOLOPE_CHECK = false;
-
-MakeMorgan(02);		// Select Part number to make	
-//MakeMorgan(21);
+MakeMorgan(21);		// Select Part number to make	
+translate([150,0,0])
+	rotate([0,0,12])
+		translate([-150,0,0])
+			rotate([0,0,90-(12/2)])
+				Secondary_Arm_hotend_holder_2(Hotend_D = 16.5, Hotend_H = 12);
+translate([0,0,27])
+	rotate([0,0,50])
+		#MakeMorgan(20);
+translate([0,0,2])
+#MakeMorgan(18);
 
 //***********************************************************
 //**                                                			**
@@ -1548,26 +1556,27 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 {
 	difference(){
-		
 		union(){
-			translate([-11,11,20 + Hotend_H])
-				rotate([20,0,0])
-					difference(){
-						import("Base_and_Riser_2.stl");
-						cube([50,50,14], center = true);
-					}
+			translate([-11,11,5 + Hotend_H])
+				difference(){
+					import("Base_and_Riser_2.stl");
+					cube([50,50,14], center = true);
+			}
 			
-			cylinder(r=30/2, h=14 + Hotend_H, $fn=50);
-			cylinder(r=27/2, h=15 + Hotend_H, $fn = 50);
-			cylinder(r=25/2, h=22 + Hotend_H, $fn = 50);	
+			cylinder(r=30/2, h=12 + Hotend_H, $fn=50);
+			//cylinder(r=27/2, h=15 + Hotend_H, $fn = 50);
+			//cylinder(r=25/2, h=23 + Hotend_H, $fn = 50);	
 		}
 			
 		translate([0,0,-1])	
-		
 		union(){
-			cylinder(r=Hotend_D/2,h=Hotend_H +1, $fn = 50);		// Mounting Hole for Hotend
-			rotate([30,0,0])
-				cylinder(r=2,h=100, $fn=36);
+			cylinder(r=Hotend_D/2,h=Hotend_H+3, $fn = 50);		// Mounting Hole for Hotend
+			//translate([0,0,Hotend_H])
+			//	cylinder(r=1.5, h=5, $fn=36);
+			translate([0,0,Hotend_H])
+				cylinder(r=3, h=8, $fn=36);
+			translate([0,0,Hotend_H+8])
+				cylinder(r1=3,r2 = 3.9,h=16, $fn=36);
 		}
 
 		rotate([0,45,0])
@@ -1577,7 +1586,7 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 	
 }
 
-module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12c){
+module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12){
 	difference(){
 		
 		union(){
@@ -1650,73 +1659,76 @@ module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12c){
 		cylinder(r=Hotend_D / 2, h=.4);
 }
 
-module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12){
+module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12c){
 	difference(){
 		
 		union(){
 			Hotend_stack_2(Hotend_D = Hotend_D, Hotend_H = Hotend_H);
 			// mounting piece
 			difference(){
-				translate([13,0,Hotend_H-1])
-					cube([8,12,20],center = true);
+				translate([13,0,Hotend_H+2])
+					#cube([9,12,20],center = true);
 				
-				translate([17,0,Hotend_H-10])
+				translate([17,0,Hotend_H-12])
 					rotate([0,45,0])
-						cube([12,12,14],center = true);
+						cube([12,12,15],center = true);
 			}
 		}
 		
 	
 		union(){
-		translate([-3,8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=2, h=45, $fn = 10);
-		translate([-6,8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
-		translate([-16,8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=4,h=10, $fn = 50);
-		translate([-11,8,Hotend_H+5.828])
-			rotate([45,0,0])
-				cube([10,4,4], center = true);
 
+		// Arm mounting holes with "drop" openings
+		//translate([-3,8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=2, h=45, $fn = 10);
+		//translate([-6,8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
+		//translate([-16,8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=4,h=10, $fn = 50);
+		//translate([-11,8,Hotend_H+5.828])
+			//rotate([45,0,0])
+				//cube([10,4,4], center = true);
 
-		translate([-3,-8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=2, h=45, $fn = 10);
-		translate([-6,-8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
 		
-		translate([-16,-8,Hotend_H+3])
-			rotate([0,90,0])
-				cylinder(r=4,h=10, $fn = 50);
-		translate([-11,-8,Hotend_H+5.828])
-			rotate([45,0,0])
-				cube([10,4,4], center = true);
+		//translate([-3,-8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=2, h=45, $fn = 10);
+		//translate([-6,-8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
+		
+		//translate([-16,-8,Hotend_H+3])
+			//rotate([0,90,0])
+				//cylinder(r=4,h=10, $fn = 50);
+		//translate([-11,-8,Hotend_H+5.828])
+			//rotate([45,0,0])
+				//cube([10,4,4], center = true);
 	
 		// mounting holes for J-Head
 
-		translate([6,20,Hotend_H-5])
+		translate([6,20,Hotend_H-7])
 			rotate([90,0,0])
 				cylinder(r=1.5, h=40, $fn = 10);
-		translate([-6,20,Hotend_H-5])
+		translate([-6,20,Hotend_H-7])
 			rotate([90,0,0])
 				cylinder(r=1.5, h=40, $fn = 10);
 
 		// Subtract the beam
-		translate([0,0,Hotend_H-10])
-			Beam(StackRadius = 30/2);
+		//translate([0,0,Hotend_H-10])
+			//Beam(StackRadius = 30/2);
 
 		// M4 inner section  for 1.75 filament support
-		translate([0,0,Hotend_H+3])
-			linear_extrude(height=200)
-				nutHole(4);
+		translate([0,0,0])
+			linear_extrude(h=400)
+				projection()
+					nutHole(4, tolerance = 0.5);
 		}
 	}
 	//SupportCylinder (r1 = 2, r2 = 7, h=10);
-	translate([0,0,Hotend_H])
+	translate([0,0,Hotend_H-1+3])
 		cylinder(r=Hotend_D / 2, h=.4);
 }
 
