@@ -1,11 +1,11 @@
 
 // Morgan SCARA Calibration phantom
 
-use <Write.scad>;
-
+use <Writescad/Write.scad>;   // get it here... http://www.thingiverse.com/thing:16193
+use <MCAD/polyholes.scad>;
 Linkage = 150;	//	Arm segment nominal length (as programmed in Firmware)
 
-xoffset = -35;	// Scara tower offset
+xoffset = -35;	// Scara tower offset (as programmed in firmware)
 yoffset = -65;
 
 K1 = 0;
@@ -33,10 +33,10 @@ module SCARAcal(){
 
 
 	intersection(){
-		translate([-xpos,ypos+yoffset,0])
+		translate([-xpos,ypos+yoffset,-1])
 			difference(){
-				cylinder(r=Linkage + 3, h=arm_height);
-				cylinder(r=Linkage - 3, h=arm_height);
+				cylinder(r=Linkage + 3, h=arm_height+2);
+				cylinder(r=Linkage - 3, h=arm_height+2);
 	
 			}
 		translate([-xpos,ypos+yoffset,0])
@@ -46,10 +46,10 @@ module SCARAcal(){
 	}
 
 	intersection(){
-		translate([xpos,ypos+yoffset,0])
+		translate([xpos,ypos+yoffset,-1])
 			difference(){
-				cylinder(r=Linkage + arm_width/2, h=arm_height);
-				cylinder(r=Linkage - arm_width/2, h=arm_height);
+				cylinder(r=Linkage + arm_width/2, h=arm_height+2);
+				cylinder(r=Linkage - arm_width/2, h=arm_height+2);
 	
 			}
 		translate([xpos,ypos+yoffset,0])
@@ -64,10 +64,10 @@ module SCARAcal(){
 	}
 
 	translate([16,70,arm_height])
-		#write("Theta",t=2,h=7,rotate=72,center=true);
+		#write("Theta",t=2,h=6,rotate=72,center=true);
 
 	translate([-16,70,arm_height])
-		#write("Psi",t=2,h=7,rotate=-72,center=true);
+		#write("Psi",t=2,h=6,rotate=-72,center=true);
 
 	translate([0,130,arm_height])
 		#write("Y",t=2,h=7,rotate=0,center=true);
@@ -76,6 +76,6 @@ module SCARAcal(){
 		#write("X",t=2,h=7,rotate=90,center=true);
 
 	translate([0,101,arm_height])
-		#write("Morgan",t=2,h=7,rotate=0,center=true);
+		#write("Morgan",t=2,h=6,rotate=0,center=true);
 	
 }
