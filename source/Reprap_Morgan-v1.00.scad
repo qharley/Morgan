@@ -17,7 +17,7 @@ SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (las
 
 ENVOLOPE_CHECK = false;
 
-MakeMorgan(02);		// Select Part number to make	
+MakeMorgan(15);		// Select Part number to make	
 //MakeMorgan(21);
 
 //***********************************************************

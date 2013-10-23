@@ -15,19 +15,10 @@ PVC_pipe_ID = 27.5;	// measure pipe ID to adjust
 THREADLESS = false;	// True for use of threadless ball screw in z-bracket
 SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (lasercut)
 
-ENVOLOPE_CHECK = false;
-MakeMorgan(21);		// Select Part number to make	
-translate([150,0,0])
-	rotate([0,0,12])
-		translate([-150,0,0])
-			rotate([0,0,90-(12/2)])
-				Secondary_Arm_hotend_holder_2(Hotend_D = 16.5, Hotend_H = 12);
-translate([0,0,27])
-	rotate([0,0,50])
-		#MakeMorgan(20);
-translate([0,0,2])
-#MakeMorgan(18);
+ENVELOPE_CHECK = false;
 
+MakeMorgan(07);		// Select Part number to make	
+//MorganEndstopZ();
 //***********************************************************
 //**                                                			**
 //**    Select the number of the module to make				**
@@ -284,7 +275,21 @@ pipeselect = false; // Show pipes in frame... default false
 //MorganMotorMount(75);
 //MorganFlatMotorMount();
 
+module Dual_toohead()
+{
+	MakeMorgan(21);		// Select Part number to make	
 
+	translate([150,0,0])
+		rotate([0,0,12])
+			translate([-150,0,0])
+				rotate([0,0,90-(12/2)])
+					Secondary_Arm_hotend_holder_2(Hotend_D = 16.5, Hotend_H = 12);
+	translate([0,0,27])
+		rotate([0,0,50])
+			#MakeMorgan(20);
+	translate([0,0,2])
+		#MakeMorgan(18);
+}
 
 module leadscrew_profile()
 {
@@ -357,6 +362,57 @@ module MorganEndstop()
 
 }
 
+
+module MorganEndstopZ()
+{
+	difference(){
+		union(){
+			cylinder(r=6, h=10);
+
+			translate([8,0,0])
+			  rotate([0,-90,0])
+				difference(){
+					translate([9,0,1.5])
+						minkowski(){
+							cube([17,8,3],center=true);
+							cylinder(r=2, h=0.00001, $fn=12);
+						}
+
+					translate([15,0,1])
+						cube([4,5,2.1], center=true);
+					translate([12,0,2.1])
+						cube([4,5,2], center=true);
+				}
+
+				translate([-5,1,5])
+					rotate([90,0,0])
+						minkowski(){
+							cube([7,6,12],center=true);
+							cylinder(r=2, h=2, $fn=12);
+						}
+
+
+		}
+
+		translate([0,0,-1])
+			polyhole(12,8);
+
+		translate([-12,0,5])
+			cube([20,8,12],center=true);
+
+		translate([-6,10,5])
+			rotate([90,0,0])
+				polyhole(20,3);
+
+		translate([-6,11,5])
+			rotate([90,0,0])
+				cylinder(r=3.1, h=5, $fn =6);
+
+
+
+	}
+
+}
 
 
 module MorganF(){
@@ -1107,12 +1163,12 @@ module MorganBeltWheel()
 	
 		for (sector = [0:3]){
 			rotate([0,0,sector*90]){
-				translate([44,0,0])
+				translate([44,0,-0.5])
 					//cylinder(r=25,h=10,$fn=100);
-					polyhole(10,50);
-				translate([42,42,0])
+					polyhole(11,50);
+				translate([42,42,-0.5])
 					//cylinder(r=10,h=10,$fn=100);
-					polyhole(10,20);
+					polyhole(11,20);
 
 				translate([-1.75,60,1.5])
 					cube([3.5,20,7]);
