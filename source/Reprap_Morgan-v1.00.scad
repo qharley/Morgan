@@ -17,7 +17,7 @@ SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (las
 
 ENVOLOPE_CHECK = false;
 
-MakeMorgan(15);		// Select Part number to make	
+MakeMorgan(1);		// Select Part number to make	
 //MakeMorgan(21);
 
 //***********************************************************
@@ -295,7 +295,7 @@ module leadscrew_nut(){
 
 		}
 		linear_extrude(height = 120/4, center = true, twist = -360)
-			scale(1.1)
+			scale(1.2)
 				leadscrew_profile();
 	}
 
