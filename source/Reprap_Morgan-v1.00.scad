@@ -1330,7 +1330,7 @@ module Extruder_Bowden_adaptor(support = true)
 		union(){
 			translate([-11,11,15])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,40], center = true);
 			}
 			
@@ -1516,7 +1516,7 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 		union(){
 			translate([-11,11,5 + Hotend_H])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,14], center = true);
 			}
 			
@@ -1553,7 +1553,7 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 			translate([-11,11,20 + Hotend_H])
 				rotate([20,0,0])
 					difference(){
-						import("Base_and_Riser_2.stl");
+						import("lib/Base_and_Riser_2.stl");
 						cube([50,50,14], center = true);
 					}
 			

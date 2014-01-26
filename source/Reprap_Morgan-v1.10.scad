@@ -20,7 +20,7 @@ SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (las
 
 ENVELOPE_CHECK = false;
 
-MakeMorgan(51);		// Select Part number to make	
+MakeMorgan(21);		// Select Part number to make	
 //MorganEndstopZ();
 //***********************************************************
 //**                                                			**
@@ -1544,7 +1544,7 @@ module Extruder_Bowden_adaptor(support = true)
 		union(){
 			translate([-11,11,15])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,40], center = true);
 			}
 			
@@ -1742,7 +1742,7 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 		union(){
 			translate([-11,11,5 + Hotend_H])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,14], center = true);
 			}
 			
@@ -1777,7 +1777,7 @@ module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
 		union(){
 			translate([-11,11,5 + Hotend_H])
 				difference(){
-					import("Base_and_Riser_2.stl");
+					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,14], center = true);
 			}
 			
