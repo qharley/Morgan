@@ -9,8 +9,8 @@ include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 
-LMxUU = 8;				// Choose linear bearing: 8 or 12mm
-rodspacing = 175;		// Distance between rods:	175 standard, 190 wide
+LMxUU = 12;				// Choose linear bearing: 8 or 12mm
+rodspacing = 190;		// Distance between rods:	175 standard, 190 wide
 PVC_pipe_OD = 32;		// Default 32mm
 PVC_pipe_ID = 27.5;	// measure pipe ID to adjust
 Drive_pipe_OD = 22.5;	// Drive pipe outter diameter: 22mm default
@@ -20,7 +20,8 @@ SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (las
 
 ENVELOPE_CHECK = false;
 
-MakeMorgan(21);		// Select Part number to make	
+//MakeMorgan(05);		// Select Part number to make	
+
 //MorganEndstopZ();
 //***********************************************************
 //**                                                			**
@@ -173,7 +174,8 @@ module MakeMorgan(partnumber)
 		Sup_Arm2();
 	}
 	if (partnumber == 21 ){
-		Secondary_Arm_hotend_holder(Hotend_D = 16.5, Hotend_H = 12);
+		//Secondary_Arm_hotend_holder_mk2(Hotend_D = 16.5, Hotend_H = 12);
+		Secondary_Arm_hotend_holder_mk2(Hotend_D = 16.5, Hotend_H = 12+25,mountpiece = true);
 	}
 	if (partnumber == 22 ){
 		leadscrew_nut();
@@ -913,6 +915,50 @@ module MorganFlatMotorMount(){
 	}
 }
 
+module MorganMotorMounts_mk5_dxf(){
+	for (a=[0:5]){
+		//for (b=[0:3]){
+			translate([a*50,0,0])
+				rotate([0,0,45]) projection(cut=true)
+					translate([0,0,-4 - 4*a])
+						MorganMotorMount5(25);
+
+		//}
+	}
+	translate([300,0,0])
+	rotate([0,0,45]) 
+		projection(cut=true)
+			translate([0,0,-4])
+				MorganMotorMount5(4);
+}
+
+module MorganMotorMount5(height = 4){
+	difference(){
+		union(){
+			Motor(height, 46);
+			translate([0,0,2]){
+				cube([80,10,4],center=true);
+				cube([10,80,4],center=true);
+			}
+		}
+		
+		for (i= [0:3]){
+			rotate([0,0,i*90]){
+				translate([0,22,height-1.6])
+					polyhole(height+2,3);
+				translate([0,35,- 1])
+					polyhole(height+2,3);
+			}
+		}
+		for (i= [0:3]){
+			rotate([0,0,i*90])
+				translate([0,22,-2])
+					polyhole(height,6);
+		}
+		translate([0,0,-1])
+			polyhole(height+2,35);
+	}	
+}
 
 module MorganMotorMount4(Height = 50, Mheight = 52){
 
@@ -1736,19 +1782,40 @@ module Secondary_Arm(){
 //		nutHole(4);
 //Hotend_stack();
 
-module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
+module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10, Mount_H = 12)
 {
 	difference(){
 		union(){
-			translate([-11,11,5 + Hotend_H])
+			//translate([-11,11,Hotend_H-17])
+				//difference(){
+					//import("lib/Base_and_Riser_2.stl");
+					//cube([50,50,14], center = true);
+				//}
+			
+			cylinder(r=30/2, h=14 + Mount_H, $fn=50);
+			cylinder(r=27/2, h=15 + Mount_H, $fn = 50);
+			if ((2 + Hotend_H) > (23 + Mount_H)){
+				translate([-11,11,Hotend_H-17])
 				difference(){
 					import("lib/Base_and_Riser_2.stl");
 					cube([50,50,14], center = true);
+				}
+				cylinder(r=25/2, h=2 + Hotend_H, $fn = 50);
+			}
+			else{
+				translate([-11,11,5 + Mount_H])
+				difference(){
+					import("lib/Base_and_Riser_2.stl");
+					cube([50,50,14], center = true);
+				}
+				cylinder(r=25/2, h=23 + Mount_H, $fn = 50);
 			}
 			
-			cylinder(r=30/2, h=14 + Hotend_H, $fn=50);
-			cylinder(r=27/2, h=15 + Hotend_H, $fn = 50);
-			cylinder(r=25/2, h=23 + Hotend_H, $fn = 50);	
+			/*linear_extrude(height = 23 + Hotend_H)
+				projection(cut=true)
+					translate([-11,11,-10])
+						import("lib/Base_and_Riser_2.stl"); */
+			//cylinder(r=Hotend_D/2 -2, h=23 + Hotend_H, $fn = 50);	
 		}
 			
 		translate([0,0,-1])	
@@ -1771,7 +1838,7 @@ module Hotend_stack(Hotend_D = 16.2, Hotend_H = 10)
 
 //Hotend_stack_2();
 
-module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 10)
+module Hotend_stack_2(Hotend_D = 16.2, Hotend_H = 12, Mount_H = Hotend_H)
 {
 	difference(){
 		union(){
@@ -1877,7 +1944,7 @@ module Secondary_Arm_hotend_holder(Hotend_D = 16.2, Hotend_H = 12){
 		cylinder(r=Hotend_D / 2, h=.4);
 }
 
-module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12c){
+module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12){
 	difference(){
 		
 		union(){
@@ -1896,34 +1963,6 @@ module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12c){
 	
 		union(){
 
-		// Arm mounting holes with "drop" openings
-		//translate([-3,8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=2, h=45, $fn = 10);
-		//translate([-6,8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
-		//translate([-16,8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=4,h=10, $fn = 50);
-		//translate([-11,8,Hotend_H+5.828])
-			//rotate([45,0,0])
-				//cube([10,4,4], center = true);
-
-		
-		//translate([-3,-8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=2, h=45, $fn = 10);
-		//translate([-6,-8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
-		
-		//translate([-16,-8,Hotend_H+3])
-			//rotate([0,90,0])
-				//cylinder(r=4,h=10, $fn = 50);
-		//translate([-11,-8,Hotend_H+5.828])
-			//rotate([45,0,0])
-				//cube([10,4,4], center = true);
 	
 		// mounting holes for J-Head
 
@@ -1947,6 +1986,81 @@ module Secondary_Arm_hotend_holder_2(Hotend_D = 16.2, Hotend_H = 12c){
 	}
 	//SupportCylinder (r1 = 2, r2 = 7, h=10);
 	translate([0,0,Hotend_H-1+3])
+		cylinder(r=Hotend_D / 2, h=.4);
+}
+
+module Secondary_Arm_hotend_holder_mk2(Hotend_D = 16.2, Hotend_H = 12,Mount_H = 12, mountpiece = true){
+	difference(){
+		
+		union(){
+			Hotend_stack(Hotend_D = Hotend_D, Hotend_H = Hotend_H, Mount_H = Mount_H);
+			// mounting piece
+			if (mountpiece){
+				difference(){
+					translate([13,0,Mount_H-1])
+						cube([8,12,20],center = true);
+				
+					translate([17,0,Mount_H-10])
+						rotate([0,45,0])
+							cube([12,13,12],center = true);
+				}
+			}
+		}
+		
+	
+		union(){
+
+		// Arm mounting holes with "drop" openings
+		translate([-3,8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=2, h=45, $fn = 10);
+		translate([-6,8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
+		translate([-16,8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=4,h=10, $fn = 50);
+		translate([-11,8,Mount_H+5.828])
+			rotate([45,0,0])
+				cube([10,4,4], center = true);
+
+		
+		translate([-3,-8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=2, h=45, $fn = 10);
+		translate([-6,-8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=3.5, r2 = 2, h=3, $fn = 10);
+		
+		translate([-16,-8,Mount_H+3])
+			rotate([0,90,0])
+				cylinder(r=4,h=10, $fn = 50);
+		translate([-11,-8,Mount_H+5.828])
+			rotate([45,0,0])
+				cube([10,4,4], center = true);
+	
+		// mounting holes for J-Head
+
+		translate([6,20,Hotend_H-7])
+			rotate([90,0,0])
+				cylinder(r=1.5, h=40, $fn = 10);
+		translate([-6,20,Hotend_H-7])
+			rotate([90,0,0])
+				cylinder(r=1.5, h=40, $fn = 10);
+
+		// Subtract the beam
+		translate([0,0,Mount_H-10])
+			Beam(StackRadius = 30/2);
+
+		// M4 inner section  for 1.75 filament support
+		translate([0,0,0])
+			linear_extrude(h=400)
+				projection()
+					nutHole(4, tolerance = 0.5);
+		}
+	}
+	//SupportCylinder (r1 = 2, r2 = 7, h=10);
+	translate([0,0,Hotend_H-1])
 		cylinder(r=Hotend_D / 2, h=.4);
 }
 

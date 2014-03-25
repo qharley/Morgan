@@ -9,15 +9,15 @@ include <MCAD/teardrop.scad>
 include <MCAD/polyholes.scad>
 include <MCAD/nuts_and_bolts.scad>
 
-LMxUU = 8;				// Choose linear bearing: 8 or 12mm
-rodspacing = 175;		// Distance between rods:	175 standard, 190 wide
+LMxUU = 12;				// Choose linear bearing: 8 or 12mm
+rodspacing = 190;		// Distance between rods:	175 standard, 190 wide
 PVC_pipe_ID = 27.5;	// measure pipe ID to adjust
 THREADLESS = false;	// True for use of threadless ball screw in z-bracket
 SUPPORTED_ROD = true;	// Rods held by Z-mounts - False for platform mounted (lasercut)
 
 ENVOLOPE_CHECK = false;
 
-MakeMorgan(1);		// Select Part number to make	
+MakeMorgan(15);		// Select Part number to make	
 //MakeMorgan(21);
 
 //***********************************************************
