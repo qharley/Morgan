@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------
-// RepRap "Morgan", main ver 1.10 - Multi extruder version
+// RepRap "Morgan", main ver 1.20 - Single extruder version
 // Copyright 2012, 2013. Author: Quentin Harley (qharley)
 // This original design is licensed under GPLv2.
 //
@@ -20,7 +20,7 @@ Leadnut_thread = false;// Apply the thread of the leadscrew nut to the Z coupler
 
 ENVELOPE_CHECK = false;
 
-MakeMorgan(16);		// Select Part number to make	
+MakeMorgan(05);		// Select Part number to make	
 
 //MorganEndstopZ();
 //***********************************************************
